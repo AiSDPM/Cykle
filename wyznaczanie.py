@@ -19,7 +19,7 @@ class Edge:
 class GraphM:
 
     def __init__(self, n, g):
-        MAXedge =  int(n*(n-1)*(g/100)/2 )
+        MAXedge =  round(n*(n-1)*(g/100)/2 )
         edge = 0
         self.matrix = []
         for i in range(n):
@@ -69,16 +69,13 @@ print (matrix)
 """
 outM = open("PRIM70M.txt", 'w')
 outL = open("PRIM70L.txt", 'w')
-
 for i in range(1, 16):
     matrix = GraphM(500 * i, 70)
-
     startTime = time.time()
     matrix.euler(0)
     endTime = time.time()
     Time = endTime - startTime
     outM.write("Euler" + str(Time) + "\n")
-
     startTime = time.time()
     list.hamilton(0)
     endTime = time.time()
