@@ -1,21 +1,6 @@
 import random
 import time
 
-
-class Edge:
-    def __init__(self, x=-1, y=-1, val=9999):
-        self.val = val
-        self.x = x
-        self.y = y
-
-    def __lt__(self, other):
-        return self.val < other.val
-
-    def __str__(self):
-        out = "[(" + str(self.x) + "," + str(self.y) + ");" + str(self.val) + "]"
-        return out
-
-
 class GraphM:
 
     def __init__(self, n, g):
