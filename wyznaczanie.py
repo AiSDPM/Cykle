@@ -31,6 +31,13 @@ class GraphM:
                 self.matrix[z][y] = 1
                 self.matrix[y][z] = 1
                 edge +=3
+        for i in range(n):
+            x = random.randint(0, n - 1)
+            y = random.randint(0, n - 1)
+            if x != y:
+                self.matrix[x], self.matrix[y] = self.matrix[y], self.matrix[x]
+                for i in range(n):
+                    self.matrix[i][x], self.matrix[i][y] = self.matrix[i][y], self.matrix[i][x]
 
     def __str__(self):
         out = ""
@@ -52,29 +59,34 @@ class GraphM:
 
     def Euler(self, v):
         out = []
-        start = v
-        return self._Euler(out, start, v)
+        return self._Euler(out, v)
     
-    def _Hamilton(self, out, v):
+    def _Hamilton(self, out, start, v):
         for i in range(len(self.matrix)):
-            if len(out) == len(self.matrix):
+            if len(out) == len(self.matrix) + 1:
                 break
-            elif self.matrix[v][i] == 1 and not (i in out):
+            elif self.matrix[v][i] == -1 and not (i in out):
                 out.append(i)
-                out = self._Hamilton(out,i)
-        if len(out) == len(self.matrix) and self.matrix[v][start] == 1:
-            return out
+                out = self._Hamilton(out, start, i)
+        print(out)
+        if len(out) >= len(self.matrix):
+            if len(out) == len(self.matrix) and self.matrix[v][start] == -1:
+                out.append(start)
         else:
-            out.pop()             
+            out.pop()
+        return out
 
     def Hamilton(self,v):
-        out = []
-        return self._Hamilton(out,v)  
+        out = [v]
+        start = v
+        return self._Hamilton(out, start, v)
    
 
 matrix = GraphM(10, 30)
 print (matrix)
-
+print(matrix.Euler(0))
+print(matrix)
+print(matrix.Hamilton(0))
 
 """
 outM = open("Euler30.txt", 'w')
