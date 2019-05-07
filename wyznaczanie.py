@@ -2,20 +2,6 @@ import random
 import time
 
 
-class Edge:
-    def __init__(self, x=-1, y=-1, val=9999):
-        self.val = val
-        self.x = x
-        self.y = y
-
-    def __lt__(self, other):
-        return self.val < other.val
-
-    def __str__(self):
-        out = "[(" + str(self.x) + "," + str(self.y) + ");" + str(self.val) + "]"
-        return out
-
-
 class GraphM:
 
     def __init__(self, n, g):
@@ -54,49 +40,41 @@ class GraphM:
                 pom = pom + str(self.matrix[i][j]) + " "
             out = out + "\n" + pom
         return out
-
-class GraphL:
-    def __init__(self, matrix):
-        self.list = []
-        l = len(matrix.matrix)
-        for i in range(l):
-            self.list.append([])
-            for j in range(l):
-                val = matrix.matrix[i][j]
-                if val != 0:
-                    self.list[i].append(j)
-
-    def __str__(self):
-        l = len(self.list)
-        out = ""
-        for i in range(l):
-            pom = str(i) + ":  "
-            li = len(self.list[i])
-            for j in range(li):
-                pom = pom + str(self.list[i][j]) + " "
-            out = out + "\n" + pom
-        return out
-    
+  
     def _Euler(self, out , v):
-        for i in self.list[v]:
-            self.list[v].remove(i) #tu moze sie wysypac
-            out = self._Euler(i)
+        for i in range(len(self.matrix)):
+            if self.matrix[v][i] == 1 :
+                self.matrix[v][i] = -1
+                self.matrix[i][v] = -1
+                out = self._Euler(out,i)
         out.append(v)
         return out
 
     def Euler(self, v):
         out = []
-        stack = []
-        return self._Euler(out, stack, v)
-
+        start = v
+        return self._Euler(out, start, v)
+    
+    def _Hamilton(self, out, v):
+        for i in range(len(self.matrix)):
+            if len(out) == len(self.matrix):
+                break
+            elif self.matrix[v][i] == 1 and not (i in out):
+                out.append(i)
+                out = self._Hamilton(out,i)
+        if len(out) == len(self.matrix) and self.matrix[v][start] == 1:
+            return out
+        else:
+            out.pop()             
 
     def Hamilton(self,v):
-        pass
+        out = []
+        return self._Hamilton(out,v)  
+   
 
 matrix = GraphM(10, 30)
 print (matrix)
-Lmatrix = GraphL(matrix)
-print(Lmatrix)
+
 
 """
 outM = open("Euler30.txt", 'w')
