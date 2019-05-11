@@ -1,6 +1,7 @@
 import random
 import time
-
+import sys
+import resource
 
 class GraphM:
 
@@ -10,18 +11,18 @@ class GraphM:
             self.matrix.append([])
             for j in range(n):
                 self.matrix[i].append(0)
-        for i in range(n-1):
-            self.matrix[i][i+1] = 1
-            self.matrix[i+1][i] = 1
-        self.matrix[0][n-1] = 1
-        self.matrix[n-1][0] = 1
+        for i in range(n - 1):
+            self.matrix[i][i + 1] = 1
+            self.matrix[i + 1][i] = 1
+        self.matrix[0][n - 1] = 1
+        self.matrix[n - 1][0] = 1
         MAXedge = round(n * (n - 1) * (g / 100) / 2)
         edge = n
         while edge < MAXedge:
-            x = random.randint(0,n-1)
-            y = random.randint(0,n-1)
-            z = random.randint(0,n-1)
-            if z==x or x==y or z==y or  self.matrix[x][y] == 1 or self.matrix[x][z] == 1 or self.matrix[y][z] == 1:
+            x = random.randint(0, n - 1)
+            y = random.randint(0, n - 1)
+            z = random.randint(0, n - 1)
+            if z == x or x == y or z == y or self.matrix[x][y] == 1 or self.matrix[x][z] == 1 or self.matrix[y][z] == 1:
                 continue
             else:
                 self.matrix[x][y] = 1
@@ -30,7 +31,7 @@ class GraphM:
                 self.matrix[z][x] = 1
                 self.matrix[z][y] = 1
                 self.matrix[y][z] = 1
-                edge +=3
+                edge += 3
         for i in range(n):
             x = random.randint(0, n - 1)
             y = random.randint(0, n - 1)
@@ -47,20 +48,20 @@ class GraphM:
                 pom = pom + str(self.matrix[i][j]) + " "
             out = out + "\n" + pom
         return out
-  
-    def _Euler(self, out , v):
+
+    def _Euler(self, out, v):
         for i in range(len(self.matrix)):
-            if self.matrix[v][i] == 1 :
+            if self.matrix[v][i] == 1:
                 self.matrix[v][i] = -1
                 self.matrix[i][v] = -1
-                out = self._Euler(out,i)
+                out = self._Euler(out, i)
         out.append(v)
         return out
 
     def Euler(self, v):
         out = []
         return self._Euler(out, v)
-    
+
     def _Hamilton(self, out, start, v):
         for i in range(len(self.matrix)):
             if len(out) == len(self.matrix) + 1:
@@ -68,7 +69,6 @@ class GraphM:
             elif self.matrix[v][i] == -1 and not (i in out):
                 out.append(i)
                 out = self._Hamilton(out, start, i)
-        print(out)
         if len(out) >= len(self.matrix):
             if len(out) == len(self.matrix) and self.matrix[v][start] == -1:
                 out.append(start)
@@ -76,35 +76,35 @@ class GraphM:
             out.pop()
         return out
 
-    def Hamilton(self,v):
+    def Hamilton(self, v):
         out = [v]
         start = v
         return self._Hamilton(out, start, v)
-   
 
-matrix = GraphM(10, 30)
-print (matrix)
-print(matrix.Euler(0))
-print(matrix)
-print(matrix.Hamilton(0))
+sys.setrecursionlimit(4500)
+print (resource.getrlimit(resources.RLIMIT_STACK))
+matrix = GraphM(100, 30)
+
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+sys.setrecursionlimit(10**6)
+
+print( matrix.Euler(0))
 
 """
-outM = open("Euler30.txt", 'w')
-outL = open("Hamilton30.txt", 'w')
+outE = open("Euler30.txt", 'w')
+outH = open("Hamilton30.txt", 'w')
 for i in range(1, 16):
-    matrix = GraphM(500 * i, 70)
-    list = GraphL(matrix)
+    matrix = GraphM(500 * i, 30)
     startTime = time.time()
-    list.euler(0)
+    matrix.Euler(0)
     endTime = time.time()
     Time = endTime - startTime
-    outM.write("Euler" + str(Time) + "\n")
+    outE.write("Euler" + str(Time) + "\n")
     startTime = time.time()
-    list.hamilton(0)
+    matrix.Hamilton(0)
     endTime = time.time()
     Time = endTime - startTime
-    outL.write("Hamilton" + str(Time) + "\n")
+    outH.write("Hamilton" + str(Time) + "\n")
     print(str(i))
-    del list
 outM.close()
-outL.close() """
+outL.close()"""
