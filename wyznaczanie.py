@@ -91,7 +91,9 @@ class GraphM:
     def Hamilton(self, v):
         out = [v]
         start = v
-        return self._Hamilton(out, start, v,0)
+        end = 0
+        out, end =  self._Hamilton(out, start, v,end)
+        return out
 
 sys.setrecursionlimit(4500)
 
