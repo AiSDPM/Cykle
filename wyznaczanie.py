@@ -66,44 +66,35 @@ class GraphM:
                 continue
             stack.pop()
             out.append(v)
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix)):
+                self.matrix[i][j]*=-1
         return out
 
-    def _Hamilton(self, out, start, v):
-        for i in range(len(self.matrix)):
-            if len(out) == len(self.matrix) + 1:
-                break
-            elif self.matrix[v][i] == -1 and not (i in out):
-                out.append(i)
-                out = self._Hamilton(out, start, i)
-        if len(out) >= len(self.matrix):
-            if len(out) == len(self.matrix) and self.matrix[v][start] == -1:
-                out.append(start)
-        else:
-            out.pop()
-        return out
+    def _Hamilton(self, out, start, v,end):
+        if end == 0:
+            for i in range(len(self.matrix)):
+                if len(out) == len(self.matrix) + 1:
+                    break
+                elif self.matrix[v][i] == 1 and not (i in out):
+                    out.append(i)
+                    out,end = self._Hamilton(out, start, i,end)
+                    if end == 1:
+                        return out,end
+            if len(out) == len(self.matrix) and self.matrix[v][start] == 1:
+                    out.append(start)
+                    end = 1
+            else:
+                out.pop()
+        return out,end
 
     def Hamilton(self, v):
         out = [v]
         start = v
-        return self._Hamilton(out, start, v)
+        return self._Hamilton(out, start, v,0)
 
 sys.setrecursionlimit(4500)
 
-
-outE = open("Euler30.txt", 'w')
-outH = open("Hamilton30.txt", 'w')
-for i in range(1, 16):
-    matrix = GraphM(10 * i, 30)
-    startTime = time.time()
-    matrix.Euler(0)
-    endTime = time.time()
-    Time = endTime - startTime
-    outE.write("Euler" + str(Time) + "\n")
-    startTime = time.time()
-    matrix.Hamilton(0)
-    endTime = time.time()
-    Time = endTime - startTime
-    outH.write("Hamilton" + str(Time) + "\n")
-    print(str(i))
-outM.close()
-outL.close()
+matrix = GraphM(6, 50)
+print(matrix)
+print(matrix.Hamilton(0))
